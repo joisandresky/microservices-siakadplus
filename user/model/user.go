@@ -12,6 +12,7 @@ type User struct {
 	Name     string        `json:"name" bson:"name"`
 	Email    string        `json:"email" bson:"email"`
 	Password string        `json:"password" bson:"password"`
+	Role     string        `json:"role" bson:"role"`
 }
 
 // GetUsers - get all users
@@ -27,6 +28,20 @@ func GetUsers() (u []User, err error) {
 	return u, err
 }
 
+// ShowUser - get one user
+func ShowUser(id string) (u User, err error) {
+	session, err := db.GetMongoSession()
+	if err != nil {
+		return u, err
+	}
+	defer session.Close()
+
+	c := session.DB("todo_micro_jois").C("users")
+	err = c.Find(bson.M{"_id": bson.ObjectIdHex(id)}).One(&u)
+
+	return u, err
+}
+
 // AddUser - add one user
 func AddUser(u User) error {
 	session, err := db.GetMongoSession()
@@ -39,5 +54,19 @@ func AddUser(u User) error {
 	c := session.DB("todo_micro_jois").C("users")
 	err = c.Insert(&u)
 
-	return nil
+	return err
+}
+
+// RemoveUser - removing one user
+func RemoveUser(id string) error {
+	session, err := db.GetMongoSession()
+	if err != nil {
+		return err
+	}
+	defer session.Close()
+
+	c := session.DB("todo_micro_jois").C("users")
+	err = c.RemoveId(bson.ObjectIdHex(id))
+
+	return err
 }

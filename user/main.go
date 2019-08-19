@@ -12,7 +12,9 @@ func main() {
 	r := gin.Default()
 
 	r.GET("/api/users", controller.GetUserService)
+	r.GET("/api/users/:id", controller.ShowUserService)
 	r.POST("/api/users", controller.AddUserService)
+	r.DELETE("/api/users/:id", controller.RemoveUserService)
 
 	var port = os.Getenv("PORT")
 	if port == "" {
