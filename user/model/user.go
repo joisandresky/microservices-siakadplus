@@ -29,7 +29,11 @@ func GetUsers() (u []User, err error) {
 }
 
 // ShowUser - get one user
-func ShowUser(id string) (u User, err error) {
+func ShowUser(id bson.ObjectId) (User, error) {
+	var (
+		err error
+		u   User
+	)
 	session, err := db.GetMongoSession()
 	if err != nil {
 		return u, err
@@ -37,7 +41,7 @@ func ShowUser(id string) (u User, err error) {
 	defer session.Close()
 
 	c := session.DB("todo_micro_jois").C("users")
-	err = c.Find(bson.M{"_id": bson.ObjectIdHex(id)}).One(&u)
+	err = c.FindId(id).One(&u)
 
 	return u, err
 }

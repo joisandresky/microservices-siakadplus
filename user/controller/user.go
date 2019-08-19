@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -29,8 +28,8 @@ func GetUserService(c *gin.Context) {
 // ShowUserService - show one user service handler
 func ShowUserService(c *gin.Context) {
 	paramID := c.Param("id")
-	user, err := model.ShowUser(paramID)
-	log.Println(err.Error())
+	user, err := model.ShowUser(bson.ObjectIdHex(paramID))
+
 	if err.Error() == "not found" {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
 			"message": "User not found with ID:" + paramID,
