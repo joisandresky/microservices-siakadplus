@@ -56,7 +56,7 @@ func AddUserService(c *gin.Context) {
 		Name:     c.PostForm("name"),
 		Email:    c.PostForm("email"),
 		Password: c.PostForm("password"),
-		Role: c.PostForm("role")
+		Role:     c.PostForm("role"),
 	}
 
 	err := model.AddUser(newUser)
