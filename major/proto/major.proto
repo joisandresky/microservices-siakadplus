@@ -1,0 +1,54 @@
+syntax="proto3";
+
+package major;
+
+option go_package="majorpb";
+
+message Major {
+  string id = 1;
+  string name = 2;
+  string level = 3;
+  string head = 4;
+  string status = 5;
+}
+
+message ListMajorReq {}
+message ListMajorRes {
+  repeated Major major = 1;
+}
+
+message ReadMajorReq {
+  string id = 1;
+}
+message ReadMajorRes {
+  Major major = 1;
+}
+
+message CreateMajorReq {
+  Major major = 1;
+}
+message CreateMajorRes {
+  Major major = 1;
+}
+
+message UpdateMajorReq {
+  Major major = 1;
+}
+message UpdateMajorRes {
+  Major major = 1;
+}
+
+message DeleteMajorReq {
+  string id = 1;
+}
+message DeleteMajorRes {
+  bool success = 1;
+}
+
+service MajorService {
+  rpc CreateMajor(CreateMajorReq) returns (CreateMajorRes) {};
+  rpc ReadMajor(ReadMajorReq) returns (ReadMajorRes) {};
+  rpc UpdateMajor(UpdateMajorReq) returns (UpdateMajorRes) {};
+  rpc DeleteMajor(DeleteMajorReq) returns (DeleteMajorRes) {};
+  rpc ListMajor(ListMajorReq) returns (ListMajorRes) {};
+}
