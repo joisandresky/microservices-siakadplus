@@ -18,7 +18,7 @@ spec:
         - name: msp-major-ga
           image: gcr.io/helical-clock-244705/msp-major-service-grpc-api-img:v1
           ports:
-            - name: msp-major-service
+            - name: msp-major-a
               containerPort: 9191
 
 
