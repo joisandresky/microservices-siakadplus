@@ -32,6 +32,6 @@ spec:
     app: msp-major-service-grpc-api
   ports:
     - name: http
-      port: 8181
-      nodePort: 30080
-  type: NodePort
+      port: 80
+      targetPort: 8181
+  type: LoadBalancer
