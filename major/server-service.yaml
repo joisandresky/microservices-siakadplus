@@ -15,7 +15,7 @@ spec:
         app: msp-major-service-grpc-server
     spec:
       containers:
-        - name: msp-major-service-grpc-server
+        - name: msp-major-gs
           image: gcr.io/helical-clock-244705/msp-major-service-grpc-server-img:v1
           ports:
             - name: msp-major-service
@@ -32,4 +32,4 @@ spec:
     app: msp-major-service-grpc-server
   ports:
     - port: 3000
-      targetPort: msp-major-service
+      targetPort: msp-major-s
