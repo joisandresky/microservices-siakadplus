@@ -16,7 +16,7 @@ func main() {
 	if port == "" {
 		port = ":8181"
 	}
-	conn, err := grpc.Dial(":9191", grpc.WithInsecure())
+	conn, err := grpc.Dial("msp-major-service:9191", grpc.WithInsecure())
 	if err != nil {
 		panic(err)
 	}
