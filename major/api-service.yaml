@@ -8,18 +8,18 @@ spec:
   selector:
     matchLabels:
       app: msp-major-service-grpc-api
-    replicas: 1
-    template:
-      metadata:
-        labels:
-          app: msp-major-service-grpc-api
-      spec:
-        containers:
-          - name: msp-major-service-grpc-api
-            image: gcr.io/helical-clock-244705/msp-major-service-grpc-api-img:v1
-            ports:
-              - name: msp-major-service
-                containerPort: 9191
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: msp-major-service-grpc-api
+    spec:
+      containers:
+        - name: msp-major-service-grpc-api
+          image: gcr.io/helical-clock-244705/msp-major-service-grpc-api-img:v1
+          ports:
+            - name: msp-major-service
+              containerPort: 9191
 
 
 ---
