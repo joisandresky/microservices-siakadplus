@@ -31,5 +31,5 @@ spec:
   selector:
     app: msp-major-service-grpc-server
   ports:
-    - port: 3000
+    - port: 9191
       targetPort: msp-major-s
