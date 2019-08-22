@@ -1,0 +1,12 @@
+package: github.com/joisandresky/microservices-siakadplus/major/server
+import:
+- package: github.com/joisandresky/microservices-siakadplus
+  subpackages:
+  - major/db
+  - major/proto
+- package: google.golang.org/grpc
+  subpackages:
+  - reflection
+- package: gopkg.in/mgo.v2
+  subpackages:
+  - bson
