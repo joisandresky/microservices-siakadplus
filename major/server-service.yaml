@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: msp-major-gs
-          image: gcr.io/helical-clock-244705/msp-major-service-grpc-server-img:v2
+          image: gcr.io/helical-clock-244705/msp-major-service-grpc-server-img:v2.1
           ports:
             - name: msp-major-s
               containerPort: 9191
