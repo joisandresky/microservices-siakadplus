@@ -12,9 +12,13 @@ message Major {
   string status = 5;
 }
 
-message ListMajorReq {}
+message ListMajorReq {
+  int32 page = 1;
+  int32 limit = 2;
+}
 message ListMajorRes {
   repeated Major major = 1;
+  int32 total = 2;
 }
 
 message ReadMajorReq {

@@ -5,6 +5,7 @@ import (
 	"google.golang.org/grpc/status"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -32,13 +33,22 @@ func main() {
 	r.GET("/api/majors", func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.TODO(), time.Minute)
 		defer cancel()
+		page, err := strconv.Atoi(c.DefaultQuery("page", "1"))
+		limit, err := strconv.Atoi(c.DefaultQuery("limit", "10"))
+		if err != nil {
+			handleError(c, err, "An error to parsing Page/Limit", nil)
+		}
 
-		req := &majorpb.ListMajorReq{}
+		req := &majorpb.ListMajorReq{
+			Page: int32(page),
+			Limit: int32(limit),
+		}
 		if resp, err := majorClient.ListMajor(ctx, req); err != nil {
 			handleError(c, err, "An Error Occured to get All Majors", nil)
 		} else {
 			c.JSON(http.StatusOK, gin.H{
 				"majors": resp.Major,
+				"total": resp.Total,
 			})
 		}
 	})

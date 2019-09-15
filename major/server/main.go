@@ -44,15 +44,21 @@ func main() {
 func (s *server) ListMajor(ctx context.Context, req *majorpb.ListMajorReq) (*majorpb.ListMajorRes, error) {
 	var majors []*majorpb.Major
 	data  := &Major{}
+	page := req.GetPage()
+	limit := int64(req.GetLimit())
+	skip := int64(page - 1) * limit
+
 	session, err := db.GetMongoSession()
 	if err != nil {
 		return &majorpb.ListMajorRes{}, err
 	}
 
-	findOptions := options.Find()
+	findOptions := options.Find().SetLimit(limit).SetSkip(skip)
+	countOptions := options.Count()
 	collection := session.Database("todo_micro_jois").Collection("majors")
 
 	curr, err := collection.Find(context.TODO(), bson.M{}, findOptions)
+	count, err := collection.CountDocuments(context.TODO(), bson.M{}, countOptions)
 	if err != nil {
 		return &majorpb.ListMajorRes{}, err
 	}
@@ -73,7 +79,7 @@ func (s *server) ListMajor(ctx context.Context, req *majorpb.ListMajorReq) (*maj
 		})
 	}
 
-	return &majorpb.ListMajorRes{Major: majors}, err
+	return &majorpb.ListMajorRes{Major: majors, Total: int32(count)}, err
 }
 
 func (s *server) CreateMajor(ctx context.Context, req *majorpb.CreateMajorReq) (*majorpb.CreateMajorRes, error) {
