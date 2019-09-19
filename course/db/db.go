@@ -1,21 +1,20 @@
 package db
 
-import "gopkg.in/mgo.v2"
+import (
+	"context"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+)
 
-var mgoSession *mgo.Session
-
-var mongoConnStr = "mongodb://jois:jois123@ds255577.mlab.com:55577/todo_micro_jois"
-
-// var mongoConnStr = "mongodb://localhost:27017"
+var mongoConnStr = "mongodb://jois:jois123@ds255577.mlab.com:55577/todo_micro_jois?retryWrites=false"
 
 // GetMongoSession - connection
-func GetMongoSession() (*mgo.Session, error) {
-	if mgoSession == nil {
-		var err error
-		mgoSession, err = mgo.Dial(mongoConnStr)
-		if err != nil {
-			return nil, err
-		}
+func GetMongoSession() (*mongo.Client, error) {
+	clientOptions := options.Client().ApplyURI(mongoConnStr)
+	client, err := mongo.Connect(context.TODO(), clientOptions)
+	if err != nil {
+		return nil, err
 	}
-	return mgoSession.Clone(), nil
+
+	return client, nil
 }

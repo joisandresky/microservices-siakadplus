@@ -1,4 +1,4 @@
-package: github.com/joisandresky/microservices-siakadplus/course
+package: github.com/joisandresky/microservices-siakadplus/course-old
 import:
 - package: github.com/gin-gonic/gin
 - package: gopkg.in/mgo.v2

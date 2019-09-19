@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/joisandresky/microservices-siakadplus/course/db"
+	"github.com/joisandresky/microservices-siakadplus/course-old/db"
 	"gopkg.in/mgo.v2/bson"
 )
 

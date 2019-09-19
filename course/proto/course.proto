@@ -1,0 +1,57 @@
+syntax="proto3";
+
+package course;
+
+option go_package="coursepb";
+
+message Course {
+    string id = 1;
+    string name = 2;
+    string semester = 3;
+}
+
+message ListCourseReq {
+    int32 page = 1;
+    int32 limit = 2;
+}
+message ListCourseRes {
+    repeated Course course = 1;
+    int32 total = 2;
+}
+
+message ReadCourseReq {
+    string id = 1;
+}
+
+message ReadCourseRes {
+    Course course = 1;
+}
+
+message CreateCourseReq {
+    Course course = 1;
+}
+message CreateCourseRes {
+    Course course = 1;
+}
+
+message UpdateCourseReq {
+    Course course = 1;
+}
+message UpdateCourseRes {
+    Course course = 1;
+}
+
+message DeleteCourseReq {
+    string id = 1;
+}
+message DeleteCourseRes {
+    bool success = 1;
+}
+
+service CourseService {
+    rpc CreateCourse(CreateCourseReq) returns (CreateCourseRes) {};
+    rpc ReadCourse(ReadCourseReq) returns (ReadCourseRes) {};
+    rpc UpdateCourse(UpdateCourseReq) returns (UpdateCourseRes) {};
+    rpc DeleteCourse(DeleteCourseReq) returns (DeleteCourseRes) {};
+    rpc ListCourse(ListCourseReq) returns (ListCourseRes) {};
+}

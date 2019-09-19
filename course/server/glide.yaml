@@ -1,0 +1,14 @@
+package: github.com/joisandresky/microservices-siakadplus/course/server
+import:
+- package: github.com/joisandresky/microservices-siakadplus
+  subpackages:
+  - course/db
+  - course/proto
+- package: go.mongodb.org/mongo-driver
+  subpackages:
+  - bson
+  - bson/primitive
+  - mongo/options
+- package: google.golang.org/grpc
+  subpackages:
+  - reflection

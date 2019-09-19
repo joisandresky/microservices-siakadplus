@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: course-service-api-deployment
+  labels:
+    app: msp-course-service-grpc-api
+spec:
+  selector:
+    matchLabels:
+      app: msp-course-service-grpc-api
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: msp-course-service-grpc-api
+    spec:
+      containers:
+        - name: msp-course-ga
+          image: gcr.io/helical-clock-244705/msp-course-service-grpc-api-img:v2.1.1
+          imagePullPolicy: Always
+          ports:
+            - name: msp-course-a
+              containerPort: 9191
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: msp-course-service-api
+spec:
+  selector:
+    app: msp-course-service-grpc-api
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8181
+  type: LoadBalancer

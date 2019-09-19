@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/joisandresky/microservices-siakadplus/course/controller"
+	"github.com/joisandresky/microservices-siakadplus/course-old/controller"
 )
 
 func main() {

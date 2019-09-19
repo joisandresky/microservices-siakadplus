@@ -1,0 +1,9 @@
+package: github.com/joisandresky/microservices-siakadplus/course/client
+import:
+- package: github.com/gin-gonic/gin
+- package: github.com/joisandresky/microservices-siakadplus
+  subpackages:
+  - course/proto
+- package: google.golang.org/grpc
+  subpackages:
+  - status

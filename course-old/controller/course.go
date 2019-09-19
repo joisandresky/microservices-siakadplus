@@ -4,10 +4,10 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joisandresky/microservices-siakadplus/course/model"
+	"github.com/joisandresky/microservices-siakadplus/course-old/model"
 )
 
-// GetCourseService - get course service handler
+// GetCourseService - get course-old service handler
 func GetCourseService(c *gin.Context) {
 	courses, err := model.GetCourses()
 
