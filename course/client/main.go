@@ -22,14 +22,14 @@ func main() {
 	if gConn == "" {
 		gConn = "localhost"
 	}
-	conn, err := grpc.Dial(gConn + ":9292", grpc.WithInsecure())
+	conn, err := grpc.Dial(gConn+":9292", grpc.WithInsecure())
 	if err != nil {
 		panic(err)
 	}
 
 	courseClient := coursepb.NewCourseServiceClient(conn)
 	r := gin.Default()
-	r.GET("/api/courses", func(c *gin.Context) {
+	r.GET("/api/courses", CORSMiddleware(), func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.TODO(), time.Minute)
 		defer cancel()
 		page, err := strconv.Atoi(c.DefaultQuery("page", "1"))
@@ -39,7 +39,7 @@ func main() {
 		}
 
 		req := &coursepb.ListCourseReq{
-			Page: int32(page),
+			Page:  int32(page),
 			Limit: int32(limit),
 		}
 		if resp, err := courseClient.ListCourse(ctx, req); err != nil {
@@ -47,19 +47,19 @@ func main() {
 		} else {
 			c.JSON(http.StatusOK, gin.H{
 				"courses": resp.Course,
-				"total": resp.Total,
+				"total":   resp.Total,
 			})
 		}
 	})
 
-	r.GET("/api/courses/:id", func(c *gin.Context){
+	r.GET("/api/courses/:id", CORSMiddleware(), func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.TODO(), time.Minute)
 		defer cancel()
 		req := &coursepb.ReadCourseReq{
-			Id:                   c.Param("id"),
+			Id: c.Param("id"),
 		}
-		resp, err := courseClient.ReadCourse(ctx, req);
-		if  err != nil {
+		resp, err := courseClient.ReadCourse(ctx, req)
+		if err != nil {
 			handleError(c, err, "An Error Occured To Read A Course", nil)
 		} else {
 			c.JSON(http.StatusOK, gin.H{
@@ -69,14 +69,14 @@ func main() {
 
 	})
 
-	r.POST("/api/courses", func(c *gin.Context){
+	r.POST("/api/courses", CORSMiddleware(), func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.TODO(), time.Minute)
 		defer cancel()
 
 		req := &coursepb.CreateCourseReq{
 			Course: &coursepb.Course{
-				Name:   c.PostForm("name"),
-				Semester:  c.PostForm("semester"),
+				Name:     c.PostForm("name"),
+				Semester: c.PostForm("semester"),
 			},
 		}
 		if resp, err := courseClient.CreateCourse(ctx, req); err != nil {
@@ -84,20 +84,20 @@ func main() {
 		} else {
 			c.JSON(http.StatusCreated, gin.H{
 				"message": "Course Created!",
-				"course": resp.Course,
+				"course":  resp.Course,
 			})
 		}
 	})
 
-	r.PUT("/api/courses/:id", func(c * gin.Context){
+	r.PUT("/api/courses/:id", CORSMiddleware(), func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.TODO(), time.Minute)
 		defer cancel()
 
 		req := &coursepb.UpdateCourseReq{
 			Course: &coursepb.Course{
-				Id: c.Param("id"),
-				Name:   c.PostForm("name"),
-				Semester:  c.PostForm("semester"),
+				Id:       c.Param("id"),
+				Name:     c.PostForm("name"),
+				Semester: c.PostForm("semester"),
 			},
 		}
 
@@ -106,12 +106,12 @@ func main() {
 		} else {
 			c.JSON(http.StatusOK, gin.H{
 				"message": "Course Updated!",
-				"course": resp.Course,
+				"course":  resp.Course,
 			})
 		}
 	})
 
-	r.DELETE("/api/courses/:id", func(c *gin.Context){
+	r.DELETE("/api/courses/:id", CORSMiddleware(), func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.TODO(), time.Minute)
 		defer cancel()
 
@@ -138,13 +138,29 @@ func handleError(c *gin.Context, err error, message string, data interface{}) {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
 			"message": "Data Not Found!",
 			"err":     err,
-			"data": data,
+			"data":    data,
 		})
 	} else {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"message": message,
-			"err": err,
-			"data": data,
+			"err":     err,
+			"data":    data,
 		})
+	}
+}
+
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
 	}
 }
