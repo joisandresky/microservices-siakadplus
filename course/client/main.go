@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	coursepb "github.com/joisandresky/microservices-siakadplus/course/proto"
 	"google.golang.org/grpc"
@@ -29,7 +30,8 @@ func main() {
 
 	courseClient := coursepb.NewCourseServiceClient(conn)
 	r := gin.Default()
-	r.GET("/api/courses", CORSMiddleware(), func(c *gin.Context) {
+	r.Use(CORSMiddleware())
+	r.GET("/api/courses", func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.TODO(), time.Minute)
 		defer cancel()
 		page, err := strconv.Atoi(c.DefaultQuery("page", "1"))
@@ -52,7 +54,7 @@ func main() {
 		}
 	})
 
-	r.GET("/api/courses/:id", CORSMiddleware(), func(c *gin.Context) {
+	r.GET("/api/courses/:id", func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.TODO(), time.Minute)
 		defer cancel()
 		req := &coursepb.ReadCourseReq{
@@ -69,7 +71,7 @@ func main() {
 
 	})
 
-	r.POST("/api/courses", CORSMiddleware(), func(c *gin.Context) {
+	r.POST("/api/courses", func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.TODO(), time.Minute)
 		defer cancel()
 
@@ -89,7 +91,7 @@ func main() {
 		}
 	})
 
-	r.PUT("/api/courses/:id", CORSMiddleware(), func(c *gin.Context) {
+	r.PUT("/api/courses/:id", func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.TODO(), time.Minute)
 		defer cancel()
 
@@ -111,7 +113,7 @@ func main() {
 		}
 	})
 
-	r.DELETE("/api/courses/:id", CORSMiddleware(), func(c *gin.Context) {
+	r.DELETE("/api/courses/:id", func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.TODO(), time.Minute)
 		defer cancel()
 
@@ -152,15 +154,17 @@ func handleError(c *gin.Context, err error, message string, data interface{}) {
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Max-Age", "86400")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, UPDATE")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Origin, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+		c.Writer.Header().Set("Access-Control-Expose-Headers", "Content-Length")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
 
 		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(204)
-			return
+			fmt.Println("OPTIONS")
+			c.AbortWithStatus(200)
+		} else {
+			c.Next()
 		}
-
-		c.Next()
 	}
 }
